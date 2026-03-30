@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import MultiSelect from "./components/dropdown";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -16,7 +17,7 @@ export default function Home() {
     setLoading(true);
     setError("");
     try {
-        const response = await fetch("/api/reverse", {
+      const response = await fetch("/api/reverse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,10 +25,10 @@ export default function Home() {
         body: JSON.stringify({ text: input }),
       });
       const data = await response.json();
-        if (!response.ok) {
+      if (!response.ok) {
         throw new Error(data.error || "Could not reverse string");
       }
-      setResult(data.result); 
+      setResult(data.result);
       setInput("");
     } catch (err) {
       setError("Could not reverse string");
@@ -57,12 +58,20 @@ export default function Home() {
             <p className="mt-4 text-green-600 font-medium">
               Reverse String {result}
             </p>
-               {error && (
-              <p className="mt-4 text-red-500 font-medium">
-                {error}
-              </p>
-            )}
+            {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
           </form>
+          <MultiSelect
+            // for error message on multiSelect
+            // error="Error Message Here"
+            placeholder="Choose an Option"
+            label="Label"
+            options={[
+              { label: "Option 1", value: "option1" },
+              { label: "Option 2", value: "option2" },
+              { label: "Option 3", value: "option3" },
+              { label: "Option 4", value: "option4" },
+            ]}
+          />
         </div>
       </main>
     </div>
