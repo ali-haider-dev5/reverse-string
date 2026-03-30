@@ -2,33 +2,32 @@
 import React, { useState } from "react";
 
 export default function Home() {
-  //taking input from user and storing in state
   const [input, setInput] = useState("");
-  //loading state to show loading spinner
   const [loading, setLoading] = useState(false);
-  //error state to show error message
   const [error, setError] = useState("");
-  //result state to show result
   const [result, setResult] = useState("");
-  //handle submit function to reverse the string
   const handleSubmit = async (e) => {
-    //prevent default form submission
     e.preventDefault();
-    //check if input is empty
     if (!input.trim()) {
       setError("Please Enter Text");
       setResult("");
       return;
     }
-    //reset error and result state
     setLoading(true);
     setError("");
-    //simulate API call with timeout
     try {
-      await new Promise((res) => setTimeout(res, 500));
-      //reverse the string
-      const reverse = input.split("").reverse().join("");
-      setResult(reverse);
+        const response = await fetch("/api/reverse", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: input }),
+      });
+      const data = await response.json();
+        if (!response.ok) {
+        throw new Error(data.error || "Could not reverse string");
+      }
+      setResult(data.result); 
       setInput("");
     } catch (err) {
       setError("Could not reverse string");
@@ -51,7 +50,6 @@ export default function Home() {
             />
             <button
               type="submit"
-              onClick={handleSubmit}
               className="bg-blue-500 text-white py-2 px-4 rounded"
             >
               {loading ? "Loading..." : "Click Me"}
@@ -59,6 +57,11 @@ export default function Home() {
             <p className="mt-4 text-green-600 font-medium">
               Reverse String {result}
             </p>
+               {error && (
+              <p className="mt-4 text-red-500 font-medium">
+                {error}
+              </p>
+            )}
           </form>
         </div>
       </main>
