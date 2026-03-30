@@ -28,7 +28,6 @@ export default function Home() {
       await new Promise((res) => setTimeout(res, 500));
       //reverse the string
       const reverse = input.split("").reverse().join("");
-      //  update result state with reversed string
       setResult(reverse);
       setInput("");
     } catch (err) {
